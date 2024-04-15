@@ -3,5 +3,8 @@
 <configuration>
     <typeAliases>
         <typeAlias type="com.gyuwangsa.vo.ExampleVO" alias="example"/>
+        <typeAlias type="com.gyuwangsa.vo.UserVO" alias="user"/>
+        <typeAlias type="com.gyuwangsa.vo.BrandVO" alias="brand"/>
+        <typeAlias type="com.gyuwangsa.vo.RoleUserVO" alias="roleEmp"/>
     </typeAliases>
 </configuration>

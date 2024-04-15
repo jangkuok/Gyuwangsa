@@ -1,8 +1,0 @@
-com\gyuwangsa\dao\impl\ExampleDaoImpl.class
-com\gyuwangsa\mapper\ExampleMapper.class
-com\gyuwangsa\controller\ExampleController.class
-com\gyuwangsa\service\impl\ExampleServiceImpl.class
-com\gyuwangsa\dao\ExampleDao.class
-com\gyuwangsa\util\SqlSessionFactoryBean.class
-com\gyuwangsa\service\ExampleService.class
-com\gyuwangsa\vo\ExampleVO.class
