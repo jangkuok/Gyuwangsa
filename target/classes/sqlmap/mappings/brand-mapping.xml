@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyuwangsa.mapper.BrandInformationMapper">
+
+    <resultMap id="brandResult" type="brand">
+        <id property="brand_cd" column="brand_cd"/>
+        <result property="brand_nm" column="brand_nm"/>
+        <result property="brand_img" column="brand_img"/>
+        <result property="brand_addr_no" column="brand_addr_no"/>
+        <result property="brand_addr" column="brand_addr"/>
+        <result property="brand_addr_dtl" column="brand_addr_dtl"/>
+        <result property="deli_comp_cd" column="deli_comp_cd"/>
+        <result property="state_cd" column="state_cd"/>
+        <result property="start_date" column="start_date" jdbcType="DATE" javaType="java.sql.Date"/>
+        <result property="end_date" column="end_date" jdbcType="DATE" javaType="java.sql.Date"/>
+        <result property="note" column="note"/>
+    </resultMap>
+
+    <!-- 브랜드 가입 -->
+   <insert id="insertBrandJoin" parameterType="brand">
+       INSERT INTO GYU_SYS_BRAND (brand_nm, brand_img, brand_addr_no, brand_addr, brand_addr_dtl, deli_comp_cd, state_cd, start_date, end_date, note)
+       VALUES (#{brand_nm}, #{brand_img}, #{brand_addr_no}, #{brand_addr}, #{brand_addr_dtl}, #{deli_comp_cd}, #{state_cd}, #{start_date}, #{end_date}, #{note});
+   </insert>
+
+    <!-- 브랜드 리스트 -->
+    <select id="selectBrandInfoList" resultMap="brandResult">
+        SELECT brand_nm
+        FROM GYU_SYS_BRAND;
+    </select>
+
+    <!-- 가입 완료된 브랜드 리스트-->
+    <select id="selectBrandInfoListJoin" parameterType="java.lang.Character" resultMap="brandResult">
+        SELECT brand_nm
+        FROM GYU_SYS_BRAND
+        WHERE state_cd = #{state_cd};
+    </select>
+</mapper>

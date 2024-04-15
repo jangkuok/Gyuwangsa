@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyuwangsa.mapper.UserInformationMapper">
+
+    <resultMap id="userResult" type="user">
+        <id property="user_id" column="user_id"/>
+        <result property="user_nm" column="user_nm"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="addr_no" column="addr_no"/>
+        <result property="addr" column="addr"/>
+        <result property="addr_dtl" column="addr_dtl"/>
+        <result property="sex_cd" column="sex_cd"/>
+        <result property="pwd_yn" column="pwd_yn"/>
+        <result property="pwd_date" column="pwd_date" jdbcType="DATE" javaType="java.sql.Date"/>
+        <result property="login_date" column="login_date" jdbcType="DATE" javaType="java.sql.Date"/>
+        <result property="join_type" column="join_type"/>
+        <result property="api_key" column="api_key"/>
+    </resultMap>
+
+    <!-- 회원가입 -->
+    <insert id="insertUserJoin" parameterType="user">
+        INSERT INTO GYU_SYS_USER (user_nm, password, name, email, phone, addr_no, addr, addr_dtl, sex_cd, pwd_yn, pwd_date, login_date, join_type, api_key)
+        VALUES (#{user_nm}, #{password}, #{name}, #{email}, #{phone}, #{addr_no}, #{addr}, #{addr_dtl}, #{sex_cd}, #{pwd_yn}, #{pwd_date}, #{login_date}, #{join_type}, #{api_key} );
+    </insert>
+
+    <!-- 회원수정 -->
+    <update id="updateUserInfo" parameterType="user">
+        UPDATE GYU_SYS_USER SET
+            password = #{password},
+            addr_no = #{addr_no},
+            addr = #{addr},
+            addr_dtl = #{addr_dtl},
+            pwd_date = #{pwd_date}
+        WHERE user_nm = #{user_nm};
+    </update>
+
+    <!--회원삭제-->
+    <delete id="deleteUserInfo" parameterType="java.lang.String">
+        DELETE FROM GYU_SYS_USER
+        WHERE user_nm = #{user_nm};
+    </delete>
+
+    <!--전체 회원 정보 조회-->
+    <select id="selectUserInfoList" resultMap="userResult">
+        SELECT *
+        FROM GYU_SYS_USER;
+    </select>
+
+    <!--회원 로그인 정보 조회-->
+    <select id="selectUserLoginInfo" parameterType="java.util.HashMap" resultMap="userResult">
+        SELECT user_nm, user_id
+        FROM GYU_SYS_USER
+        WHERE user_nm = #{user_nm} AND user_id = #{user_id};
+    </select>
+
+    <!--회원 정보 조회-->
+    <select id="selectUserInfo" parameterType="java.lang.String"  resultMap="userResult">
+        SELECT *
+        FROM GYU_SYS_USER
+        WHERE user_nm = #{user_nm};
+    </select>
+
+</mapper>

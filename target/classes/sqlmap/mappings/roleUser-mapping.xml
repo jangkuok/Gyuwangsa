@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyuwangsa.mapper.RoleUserMapper">
+
+    <resultMap id="roleEmpResult" type="roleEmp">
+        <id property="user_nm" column="user_nm"/>
+        <result property="role_cd" column="role_cd"/>
+        <result property="start_date" column="start_date" jdbcType="DATE" javaType="java.sql.Date"/>
+        <result property="end_date" column="end_date" jdbcType="DATE" javaType="java.sql.Date"/>
+        <result property="brand_cd" column="brand_cd"/>
+        <result property="note" column="note"/>
+    </resultMap>
+
+    <!-- 회원가입 시 권한 부여-->
+    <insert id="insertRoleUserInfo" parameterType="roleEmp">
+        INSERT INTO GYU_SYS_ROLE_USER
+        VALUES (#{user_nm}, #{role_cd}, #{start_date}, #{end_date}, #{brand_cd}, #{note});
+    </insert>
+
+    <!-- 해당 유저 권한 찾기-->
+    <select id="selectRoleUserAuthorities" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT role_cd FROM GYU_SYS_ROLE_USER
+        WHERE user_nm = #{user_nm};
+    </select>
+
+</mapper>
