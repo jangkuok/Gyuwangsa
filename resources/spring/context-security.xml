@@ -10,9 +10,10 @@
     <security:http auto-config="false">
 
         <!-- 로그인 페이지와 로그인 처리 설정 -->
+        <!--
         <security:form-login login-page="/loginPage.do" login-processing-url="/user/loginForm.do" username-parameter="user_nm" password-parameter="password"
                              default-target-url="/" always-use-default-target="true"/>
-
+        -->
         <!-- 총 관리자 접근 가능 -->
         <security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <!-- 브랜드 관리자 접근 가능 -->
@@ -23,16 +24,30 @@
         <security:intercept-url pattern="/**" access="permitAll()"/>
 
         <!-- 로그아웃 설정 -->
+        <!--
         <security:logout logout-url="/logoutForm.do" logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID"/>
-
+        -->
         <!-- CSRF 보호 비활성화 -->
         <security:csrf disabled="true"/>
 
         <!-- 동시 세션 제어 설정 -->
+        <!--
         <security:session-management>
             <security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/loginPage.do?expired=true"/>
         </security:session-management>
+        -->
+        <!-- jwt 로그인 설정 -->
+        <security:form-login login-page="/loginPage.do" login-processing-url="/user/loginForm.do"
+                             username-parameter="user_nm" password-parameter="password"
+                             authentication-success-handler-ref="authenticationSuccessHandler"
+                             authentication-failure-handler-ref="authenticationFailureHandler"/>
 
+        <!--jwt 로그아웃 설정-->
+        <security:logout logout-url="/logoutForm.do" invalidate-session="true" delete-cookies="JSESSIONID"
+                         success-handler-ref="jwtLogoutSuccessHandler"/>
+
+        <!-- jwtTokenFilter 로 토큰 유효성 검사 수행 -->
+        <security:custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="jwtTokenProvider"/>
     </security:http>
 
     <!-- 사용자 인증을 수행 -->
@@ -46,4 +61,22 @@
     <bean id="securityUserDetailsService" class="com.gyuwangsa.security.SecurityUserDetailsService"/>
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+    <!-- jwtConfig bean -->
+    <bean id="jwtConfig" class="com.gyuwangsa.security.JwtConfig"/>
+
+    <!-- jwt 토큰 생성 및 유효성 검사 bean -->
+    <bean id="jwtTokenProvider" class="com.gyuwangsa.security.JwtTokenProvider">
+        <constructor-arg ref="jwtConfig"/>
+    </bean>
+    <!-- 사용자 로그아웃 및 jwt 토큰 파기-->
+    <bean id="jwtLogoutSuccessHandler" class="com.gyuwangsa.security.JwtLogoutSuccessHandler">
+        <property name="jwtTokenProvider" ref="jwtTokenProvider"/>
+    </bean>
+    <!-- 인증 성공 bean-->
+    <bean id="authenticationSuccessHandler" class="com.gyuwangsa.security.SecurityAuthenticationSuccessHandler">
+        <constructor-arg ref="jwtTokenProvider"/>
+    </bean>
+
+    <!-- 인증 실패 bean-->
+    <bean id="authenticationFailureHandler" class="com.gyuwangsa.security.SecurityAuthenticationFailureHandler"/>
 </beans>

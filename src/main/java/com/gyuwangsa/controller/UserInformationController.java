@@ -4,22 +4,13 @@ import com.gyuwangsa.service.RoleUserService;
 import com.gyuwangsa.service.UserInformationService;
 import com.gyuwangsa.vo.RoleUserVO;
 import com.gyuwangsa.vo.UserVO;
-import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +21,6 @@ import java.util.Date;
 public class UserInformationController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserInformationController.class);
-
-
-    @Autowired
-    @Qualifier("authenticationManager")
-    private AuthenticationManager authenticationManager;
-
 
     @Resource(name = "userInformationService")
     private UserInformationService userInformationService;
@@ -127,33 +112,5 @@ public class UserInformationController {
         logger.info("########## 로그인 페이지 이동 ##########");
         return "loginPage";
     };
-
-    //로그인
-    @ResponseBody
-    @RequestMapping(value = "/user/loginForm.do", method = RequestMethod.POST)
-    public String loginForm(HttpServletRequest request, RedirectAttributes redirectAttributes){
-
-        logger.info("########## 로그인 검증 ##########");
-
-        String user_id = request.getParameter("user_nm");
-        String password = request.getParameter("password");
-
-        try {
-            //사용자 인증을 위한 객체 생성
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user_id, password);
-            //인증 수행
-            Authentication authentication = authenticationManager.authenticate(token);
-            //인증 성공 후 인증 객체 설정
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            logger.info("########## 로그인 완료 ##########");
-            
-            return "redirect://";
-        }catch (Exception e){
-            e.printStackTrace();
-            return "redirect://loginPage.do";
-        }
-    };
-
 
 }
